@@ -23,8 +23,8 @@ const config = {
 new Phaser.Game(config);
 
 function preload() {
-    // this.load.atlas('player', './assets/spritesheet.webp', './assets/atlas.json');
-    this.load.atlas('player', './assets/spritesheet2.png', './assets/atlas2.json');
+    this.load.atlas('player', './assets/spritesheet.webp', './assets/atlas.json');
+    // this.load.atlas('player', './assets/spritesheet2.png', './assets/atlas2.json');
     this.load.image('ground', './assets/ground.webp');
     this.load.image('background', './assets/bg.webp');
     let url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
