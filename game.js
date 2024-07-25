@@ -123,14 +123,30 @@ function create() {
     });
 
     //agregar joystick
-    this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-        x: 55,
-        y: 450,
-        radius: 100,
-        base: this.add.circle(0, 0, 25, 0x888888),
-        thumb: this.add.circle(0, 0, 15, 0xcccccc),
-    });
-    this.joystickCursors = this.joyStick.createCursorKeys();
+    this.joyStick = this.plugins.get('rexvirtualjoystickplugin')
+        .add(this, {
+            x: 50,
+            y: this.sys.game.config.height - 60,
+            radius: 20,
+            base: this.add.circle(0, 0, 25, 0x888888),
+            thumb: this.add.circle(0, 0, 15, 0xcccccc),
+        })
+
+    this.joystickCursors = this.joyStick.createCursorKeys()
+
+    // Crear un botón para la acción de ataque
+    this.attackButton = this.add.circle(this.sys.game.config.width - 60, this.sys.game.config.height - 60, 25, 0x888888)
+        .setInteractive()
+        .on('pointerdown', () => {
+            this.attackButtonDown = true;
+        })
+        .on('pointerup', () => {
+            this.attackButtonDown = false;
+        });
+
+    // Inicializar la propiedad para el estado del botón de ataque
+    this.attackButtonDown = false;
+
 
 }
 
@@ -145,7 +161,7 @@ function update() {
         this.bg1.tilePositionX = 0;
     }
 
-    if (this.keys.attack.isDown && !this.isAttacking && this.canAttack) {
+    if ((this.keys.attack.isDown || this.attackButtonDown )&& !this.isAttacking && this.canAttack) {
         player.anims.play('attack', true);
         this.isAttacking = true;
         player.setVelocityX(0);
@@ -215,7 +231,7 @@ function update() {
             player.setVelocityX(0);
             player.anims.play('idle', true);
 
-            if ((this.keys.up.isDown || this.joystickCursors.up.isDown)&& this.canJump && this.onGround) {
+            if ((this.keys.up.isDown || this.joystickCursors.up.isDown) && this.canJump && this.onGround) {
                 player.anims.play('jump', true);
                 player.setVelocityY(-300);
                 this.canJump = false;
