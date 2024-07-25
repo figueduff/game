@@ -134,20 +134,6 @@ function create() {
 
     this.joystickCursors = this.joyStick.createCursorKeys()
 
-    // Crear un botón para la acción de ataque
-    this.attackButton = this.add.circle(this.sys.game.config.width - 60, this.sys.game.config.height - 60, 25, 0x888888)
-        .setInteractive()
-        .on('pointerdown', () => {
-            this.attackButtonDown = true;
-        })
-        .on('pointerup', () => {
-            this.attackButtonDown = false;
-        });
-
-    // Inicializar la propiedad para el estado del botón de ataque
-    this.attackButtonDown = false;
-
-
 }
 
 function update() {
@@ -161,7 +147,7 @@ function update() {
         this.bg1.tilePositionX = 0;
     }
 
-    if ((this.keys.attack.isDown || this.attackButtonDown )&& !this.isAttacking && this.canAttack) {
+    if ((this.keys.attack.isDown)&& !this.isAttacking && this.canAttack) {
         player.anims.play('attack', true);
         this.isAttacking = true;
         player.setVelocityX(0);
