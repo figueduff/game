@@ -26,6 +26,8 @@ function preload() {
     this.load.atlas('player', './assets/spritesheet.webp', './assets/atlas.json');
     this.load.image('ground', './assets/ground.webp');
     this.load.image('background', './assets/bg.webp');
+    let url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+    this.load.plugin('rexvirtualjoystickplugin', url, true);
 }
 
 function create() {
@@ -119,6 +121,17 @@ function create() {
         right: Phaser.Input.Keyboard.KeyCodes.D,
         attack: Phaser.Input.Keyboard.KeyCodes.SPACE
     });
+
+    //agregar joystick
+    this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+        x: 55,
+        y: 450,
+        radius: 100,
+        base: this.add.circle(0, 0, 25, 0x888888),
+        thumb: this.add.circle(0, 0, 15, 0xcccccc),
+    });
+    this.joystickCursors = this.joyStick.createCursorKeys();
+
 }
 
 function update() {
@@ -138,18 +151,18 @@ function update() {
         player.setVelocityX(0);
     }
 
-    if (this.keys.up.isDown && this.canJump) {
+    if ((this.keys.up.isDown || this.joystickCursors.up.isDown) && this.canJump) {
         player.anims.play('jump', true);
         player.setVelocityY(-300);
         this.canJump = false;
         this.isJumping = true;
         this.canAttack = false;
 
-        if (this.keys.right.isDown) {
+        if (this.keys.right.isDown || this.joystickCursors.right.isDown) {
             player.setVelocityX(160);
             player.flipX = false;
             this.initialDirection = 'right';
-        } else if (this.keys.left.isDown) {
+        } else if (this.keys.left.isDown || this.joystickCursors.left.isDown) {
             player.setVelocityX(-160);
             player.flipX = true;
             this.initialDirection = 'left';
@@ -164,19 +177,19 @@ function update() {
             player.setVelocityX(-160);
         }
 
-        if (this.keys.right.isDown) {
+        if (this.keys.right.isDown || this.joystickCursors.right.isDown) {
             player.flipX = false;
         } else if (this.keys.left.isDown) {
             player.flipX = true;
         }
     } else {
-        if (this.keys.right.isDown) {
+        if (this.keys.right.isDown || this.joystickCursors.right.isDown) {
             player.anims.play('run', true);
             player.flipX = false;
             this.canAttack = true;
             player.setVelocityX(160);
 
-            if (this.keys.up.isDown && this.canJump && this.onGround) {
+            if ((this.keys.up.isDown || this.joystickCursors.up.isDown) && this.canJump && this.onGround) {
                 player.anims.play('jump', true);
                 player.setVelocityY(-300);
                 this.canJump = false;
@@ -184,13 +197,13 @@ function update() {
                 this.canAttack = false;
                 this.initialDirection = 'right';
             }
-        } else if (this.keys.left.isDown) {
+        } else if (this.keys.left.isDown || this.joystickCursors.left.isDown) {
             player.anims.play('run', true);
             player.flipX = true;
             this.canAttack = true;
             player.setVelocityX(-160);
 
-            if (this.keys.up.isDown && this.canJump && this.onGround) {
+            if ((this.keys.up.isDown || this.joystickCursors.up.isDown) && this.canJump && this.onGround) {
                 player.anims.play('jump', true);
                 player.setVelocityY(-300);
                 this.canJump = false;
@@ -202,7 +215,7 @@ function update() {
             player.setVelocityX(0);
             player.anims.play('idle', true);
 
-            if (this.keys.up.isDown && this.canJump && this.onGround) {
+            if ((this.keys.up.isDown || this.joystickCursors.up.isDown)&& this.canJump && this.onGround) {
                 player.anims.play('jump', true);
                 player.setVelocityY(-300);
                 this.canJump = false;
